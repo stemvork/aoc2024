@@ -1,4 +1,4 @@
-const day = 3;
+const day = 4;
 const zeroPad = (num, places) => String(num).padStart(places, '0');
 
 console.log(`Day ${zeroPad(day,2)} part 1: test case =`, solve1(sample()));
