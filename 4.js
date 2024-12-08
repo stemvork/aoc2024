@@ -11,7 +11,7 @@ function search_and_set(grid, i, j, mask, count) {
     if(i>=3 && j>=3) { // up left diagonal
 	const word = [grid[i][j], grid[i-1][j-1], grid[i-2][j-2], grid[i-3][j-3]].join("");
 	if(word === "XMAS" || word === "SAMX") {
-	    mask[i][j] ||= true;
+	    mask[i][j]     ||= true;
 	    mask[i-1][j-1] ||= true;
 	    mask[i-2][j-2] ||= true;
 	    mask[i-3][j-3] ||= true;
@@ -21,7 +21,7 @@ function search_and_set(grid, i, j, mask, count) {
     if(i>=3 && j<grid.n-3) { // up right diagonal
 	const word = [grid[i][j], grid[i-1][j+1], grid[i-2][j+2], grid[i-3][j+3]].join("");
 	if(word === "XMAS" || word === "SAMX") {
-	    mask[i][j] ||= true;
+	    mask[i][j]     ||= true;
 	    mask[i-1][j+1] ||= true;
 	    mask[i-2][j+2] ||= true;
 	    mask[i-3][j+3] ||= true;
@@ -31,7 +31,7 @@ function search_and_set(grid, i, j, mask, count) {
     if(i<grid.m-3 && j>=3) { // down left diagonal
 	const word = [grid[i][j], grid[i+1][j-1], grid[i+2][j-2], grid[i+3][j-3]].join("");
 	if(word === "XMAS" || word === "SAMX") {
-	    mask[i][j] ||= true;
+	    mask[i][j]     ||= true;
 	    mask[i+1][j-1] ||= true;
 	    mask[i+2][j-2] ||= true;
 	    mask[i+3][j-3] ||= true;
@@ -41,7 +41,7 @@ function search_and_set(grid, i, j, mask, count) {
     if(i<grid.m-3 && j<grid.n-3) { // down right diagonal
 	const word = [grid[i][j], grid[i+1][j+1], grid[i+2][j+2], grid[i+3][j+3]].join("");
 	if(word === "XMAS" || word === "SAMX") {
-	    mask[i][j] ||= true;
+	    mask[i][j]     ||= true;
 	    mask[i+1][j+1] ||= true;
 	    mask[i+2][j+2] ||= true;
 	    mask[i+3][j+3] ||= true;
@@ -51,27 +51,27 @@ function search_and_set(grid, i, j, mask, count) {
     if(i>=3) { // up
 	const word = [grid[i][j], grid[i-1][j], grid[i-2][j], grid[i-3][j]].join("");
 	if(word === "XMAS" || word === "SAMX") {
-	    mask[i][j] ||= true;
-	    mask[i-1][j] ||= true;
-	    mask[i-2][j] ||= true;
-	    mask[i-3][j] ||= true;
+	    mask[i][j]     ||= true;
+	    mask[i-1][j]   ||= true;
+	    mask[i-2][j]   ||= true;
+	    mask[i-3][j]   ||= true;
 	    count++;
 	}
     }
     if(j>=3) { // left
 	const word = [grid[i][j], grid[i][j-1], grid[i][j-2], grid[i][j-3]].join("");
 	if(word === "XMAS" || word === "SAMX") {
-	    mask[i][j] ||= true;
-	    mask[i][j-1] ||= true;
-	    mask[i][j-2] ||= true;
-	    mask[i][j-3] ||= true;
+	    mask[i][j]     ||= true;
+	    mask[i][j-1]   ||= true;
+	    mask[i][j-2]   ||= true;
+	    mask[i][j-3]   ||= true;
 	    count++;
 	}
     }
     if(i<grid.m-3) { // down
 	const word = [grid[i][j], grid[i+1][j], grid[i+2][j], grid[i+3][j]].join("");
 	if(word === "XMAS" || word === "SAMX") {
-	    mask[i][j] ||= true;
+	    mask[i][j]   ||= true;
 	    mask[i+1][j] ||= true;
 	    mask[i+2][j] ||= true;
 	    mask[i+3][j] ||= true;
@@ -81,7 +81,7 @@ function search_and_set(grid, i, j, mask, count) {
     if(j<grid.n-3) { // right
 	const word = [grid[i][j], grid[i][j+1], grid[i][j+2], grid[i][j+3]].join("");
 	if(word === "XMAS" || word === "SAMX") {
-	    mask[i][j] ||= true;
+	    mask[i][j]   ||= true;
 	    mask[i][j+1] ||= true;
 	    mask[i][j+2] ||= true;
 	    mask[i][j+3] ||= true;

@@ -9,6 +9,7 @@ console.log(`Day ${zeroPad(day,2)} part 2: real case =`, solve2(input()));
 
 function solve1(data) {
     const candidates = data.split('mul');
+    //console.log(candidates);
     let total = 0;
     for(const c of candidates) {
 	if(c[0] !== '(') continue;

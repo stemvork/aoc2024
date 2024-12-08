@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guard Walk Visualizer</title>
+    <style>
+        canvas {
+            display: block;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+        }
+        .controls {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Guard Walk Visualizer</h1>
+    <h3 style="text-align: center;">Number of loops: <div style="display: inline-block;" id="loop-count">0</div></h3>
+    <canvas id="guardCanvas"></canvas>
+    <div class="controls">
+        <button id="startBtn">Start</button>
+        <button id="stepBtn">Step</button>
+        <button id="resetBtn">Reset</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById("guardCanvas");
+        const ctx = canvas.getContext("2d");
+
+        const CELL_SIZE = 40;
+        const GUARD_SYMBOLS = ['^', '>', 'v', '<'];
+        const DIRECTIONS = [
+            { dx: 0, dy: -1, symbol: '^' }, // up
+            { dx: 1, dy: 0, symbol: '>' },  // right
+            { dx: 0, dy: 1, symbol: 'v' },  // down
+            { dx: -1, dy: 0, symbol: '<' }  // left
+        ];
+
+        let area = sample().split('\n').map(line => line.split(''));
+	area[6][3] = '#';
+        let guard = initializeGuard(area);
+
+        canvas.width = area[0].length * CELL_SIZE;
+        canvas.height = area.length * CELL_SIZE;
+
+        let intervalId = null;
+
+        function initializeGuard(area) {
+            for (let y = 0; y < area.length; y++) {
+                for (let x = 0; x < area[y].length; x++) {
+                    const symbol = area[y][x];
+                    if (GUARD_SYMBOLS.includes(symbol)) {
+                        return { x, y, dir: GUARD_SYMBOLS.indexOf(symbol), loop: false };
+                    }
+                }
+            }
+            return null;
+        }
+
+        function drawGrid() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let y = 0; y < area.length; y++) {
+                for (let x = 0; x < area[0].length; x++) {
+                    const cell = area[y][x];
+                    ctx.strokeStyle = "#ddd";
+                    ctx.strokeRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+
+                    // Draw obstacles, guard, and visited cells
+                    if (cell === '#') {
+                        ctx.fillStyle = "#000";
+                        ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                    } else if (cell === 'X') {
+                        ctx.fillStyle = "#ccc";
+                        ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                    } else if (GUARD_SYMBOLS.includes(cell)) {
+                        ctx.fillStyle = "blue";
+                        ctx.font = `${CELL_SIZE / 2}px Arial`;
+                        ctx.textAlign = "center";
+                        ctx.textBaseline = "middle";
+                        ctx.fillText(cell, x * CELL_SIZE + CELL_SIZE / 2, y * CELL_SIZE + CELL_SIZE / 2);
+                    }
+                }
+            }
+        }
+
+        function stepGuard() {
+            if (!guard) return;
+
+            const { x, y, dir } = guard;
+            const { dx, dy } = DIRECTIONS[dir];
+            const nextX = x + dx;
+            const nextY = y + dy;
+
+            // Check if guard exits the area
+            if (nextX < 0 || nextX >= area[0].length || nextY < 0 || nextY >= area.length) {
+                clearInterval(intervalId);
+                alert("Guard exited the map!");
+                return;
+            }
+
+            // Handle obstacles and movement
+            if (area[nextY][nextX] === '#') {
+                guard.dir = (dir + 1) % 4; // Rotate right
+            } else {
+                // Mark current position as visited
+                area[guard.y][guard.x] = 'X';
+                // Move the guard
+                guard.x = nextX;
+                guard.y = nextY;
+                area[guard.y][guard.x] = DIRECTIONS[guard.dir].symbol;
+            }
+
+            drawGrid();
+        }
+
+        function startSimulation() {
+            if (intervalId) clearInterval(intervalId);
+            intervalId = setInterval(stepGuard, 100);
+        }
+
+        function resetSimulation() {
+            if (intervalId) clearInterval(intervalId);
+            area = sample().split('\n').map(line => line.split(''));
+            guard = initializeGuard(area);
+            drawGrid();
+        }
+
+        // Initialize controls
+        document.getElementById("startBtn").addEventListener("click", startSimulation);
+        document.getElementById("stepBtn").addEventListener("click", stepGuard);
+        document.getElementById("resetBtn").addEventListener("click", resetSimulation);
+
+        // Draw initial grid
+        drawGrid();
+
+        function sample() {
+            return `....#.....
+.........#
+..........
+..#.......
+.......#..
+..........
+.#..^.....
+........#.
+#.........
+......#...`;
+        }
+    </script>
+</body>
+</html>
+
