@@ -1,4 +1,4 @@
-const day = 3;
+const day = 9;
 const zeroPad = (num, places) => String(num).padStart(places, '0');
 
 console.log(`Day ${zeroPad(day,2)} part 1: test case =`, solve1(sample()));
@@ -20,7 +20,7 @@ function sample() {
 }
 
 function input() {
-    return ``;
+    return read_file(`./${day}.txt`);
 }
 
 function read_file(path) {
