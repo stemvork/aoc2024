@@ -18,60 +18,41 @@ console.log("Test results:", results);
 console.log(`Day ${zeroPad(day,2)} part 1: test case =`, solve1(sample()));
 console.log(`Day ${zeroPad(day,2)} part 1: real case =`, solve1(input()));
 
-//console.log(`Day ${zeroPad(day,2)} part 2: test case =`, solve2(sample()));
+console.log(`Day ${zeroPad(day,2)} part 2: test case =`, solve2(sample()));
 //console.log(`Day ${zeroPad(day,2)} part 2: real case =`, solve2(input()));
 
-function get_last_not(str, c) {
-    for(let i=str.length-1; i>0; i--) {
-	if(str[i] !== c) return i;
-    }
+function checksum_arr(arr) {
+    return arr.map((x, xi) => x*xi).reduce((p, c) => p + c, 0);
 }
 
-function checksum(str) {
-    let total = 0;
-    for(let i=0; i<str.length; i++) {
-	if(str[i] === '.') continue;
-	const code = str.charCodeAt(i);
-	if(code > 47 && code < 58) {
-	    total += parseInt(str[i]) * i;
-	}
-    }
-    return total;
+function defrag_index(arr) {
+    let i = arr.indexOf(null);
+    let j = arr.length-1;
+    while(arr[j] === null) { j--; }
+    if(i >= j) return false;
+    [arr[j], arr[i]] = [arr[i], arr[j]];
+    // console.log(arr);
+    return true;
+}
+
+function defrag_files(arr) {
+    // NOTE: partition by file (keep index) and then start at the last file, get free spaces before the before-last file and take the first free space that can fit the last file, if no such file exists, skip moving the file for now
+    console.log(arr);
+    return false;
 }
 
 function solve1(data) {
-    const chars = data.split("");
-    let defrag = "";
-    let free = 0;
-    let used = 0;
-    for(let i=0; i<chars.length; i++) {
-	const x = parseInt(chars[i]);
-	if(i%2 === 0) { 
-	    const suffix = `${i/2}`.repeat(x);
-	    defrag = `${defrag}${suffix}`; 
-	    used += x;
-	}
-	if(i%2 === 1) { 
-	    const suffix = '.'.repeat(x);
-	    defrag = `${defrag}${suffix}`; 
-	    if(i !== chars.length - 1) free += x;
-	}
-    }
-
-    let i = defrag.indexOf('.');
-    let j = get_last_not(defrag, '.');
-    while(i < j) {
-	if(defrag.slice(i).split("").every(x => x === ".")) return checksum(defrag);
-	defrag = defrag.slice(0, i) + defrag[j] + defrag.slice(i+1, j) + '.'.repeat(defrag.length-j);
-	// console.log(defrag);
-	i = defrag.indexOf('.');
-	j = get_last_not(defrag, '.');
-    }
-    return checksum(defrag);
+    const nums = data.split("").map(x => parseInt(x));
+    const files = nums.map((x, xi) => Array(x).fill(xi%2===0?xi/2:null)).flat();
+    while(defrag_index(files)) continue;
+    return checksum_arr(files);
 }
 
 function solve2(data) {
-    const lines = data.split('\n');
+    const nums = data.split("").map(x => parseInt(x));
+    const files = nums.map((x, xi) => Array(x).fill(xi%2===0?xi/2:null)).flat();
+    while(defrag_files(files)) continue;
+    return checksum_arr(files);
 }
 
 function sample() {
